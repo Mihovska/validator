@@ -1,0 +1,16 @@
+{
+  "name": "validator",
+  "version": "1.0.0",
+  "description": "A validation services for weird LTD.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "test-watch": "mocha --watch"
+  },
+  "author": "Rapha Leon",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
+}
