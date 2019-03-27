@@ -1,7 +1,5 @@
 const chai = require('chai');
-const validatorWith = require('../lib/validator');
-nonPositiveValidationRule = require('../lib/rules/nonPositive');
-nonDivisibleValidationRule = require('../lib/rules/nonDivisible');
+const factorywithConfiguration = require('../lib/factory');
 
 const expect = chai.expect;
 
@@ -10,11 +8,13 @@ describe('A Validation', () => {
 
   context('using the default validation rules:', () => {
     beforeEach(() => {
-      validator = validatorWith([
-        nonPositiveValidationRule,
-        nonDivisibleValidationRule(3, 'error.three'),
-        nonDivisibleValidationRule(5, 'error.five')
-      ]);
+      const fakeConfiguration = () => [
+        { type: 'nonPositivee' },
+        { type: 'nonDivisible', options: { divisor: 3, error: 'error.three' } },
+        { type: 'nonDivisible', options: { divisor: 5, error: 'error.five' } }
+      ];
+      const newValidator = factorywithConfiguration(fakeConfiguration);
+      validator = newValidator('default');
     });
 
     it('will return no errors for valid numbers', () => {
