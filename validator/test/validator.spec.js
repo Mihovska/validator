@@ -5,12 +5,6 @@ nonDivisibleValidationRule = require('../lib/rules/nonDivisible');
 
 const expect = chai.expect;
 
-function expectedToIncludeErrorWhenInvalid(number, error) {
-  it(`like ${number}`, () => {
-    expect(validator(number)).to.be.include(error);
-  });
-};
-
 describe('A Validation', () => {
   let validator;
 
