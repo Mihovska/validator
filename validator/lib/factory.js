@@ -2,12 +2,21 @@ const validatorWith = require('./validator');
 const nonPositiveValidationRule = require('./rules/nonPositive');
 const nonDivisibleValidationrule = require('./rules/nonDivisible');
 
-module.exports = function () {
-  return function () {
-    return validatorWith([
-      nonPositiveValidationRule,
-      nonDivisibleValidationrule(3, 'error.three'),
-      nonDivisibleValidationrule(5, 'error.five')
-    ]);
+const ruleFactoryMap = {
+  nonPositive: function() {
+    return nonPositiveValidationRule;
+  },
+  nonDivisible: function(options) {
+    return nonDivisibleValidationrule(options.divisor, options.error);
+  }
+};
+
+function toValidatorRule(ruleDescription) {
+  return ruleFactoryMap[ruleDescription.type](ruleDescription.options);
+};
+
+module.exports = function (findConfiguration) {
+  return function (ruleSetName) {
+    return validatorWith(findConfiguration(ruleSetName).map(toValidatorRule));
   };
 };
