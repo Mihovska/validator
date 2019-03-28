@@ -4,6 +4,7 @@ const factorywithConfiguration = require('../lib/factory');
 
 const expect = chai.expect;
 
+chai.use(require('sinon-chai'));
 describe('A Validation', () => {
   let validator;
   let configuration;
@@ -21,8 +22,8 @@ describe('A Validation', () => {
     });
 
     it('will access the configuration to get the validation rules', () => {
-      expect(configuration.callCount).to.be.equal(1);
-      expect(configuration.calledWithExactly('default')).to.be.ok;
+      expect(configuration).to.be.have.been.calledOnce;
+      expect(configuration).to.have.been.calledWithExactly('default');
     });
 
     it('will return no errors for valid numbers', () => {
@@ -68,8 +69,8 @@ describe('A Validation', () => {
     });
 
     it('will access the configuration to get the validation rules', () => {
-      expect(configuration.callCount).to.be.equal(1);
-      expect(configuration.calledWithExactly('alternative')).to.be.ok;
+      expect(configuration).to.be.have.been.calledOnce;
+      expect(configuration).to.have.been.calledWithExactly('alternative');
     });
 
     context('for numbers divisible by 11:', () => {
