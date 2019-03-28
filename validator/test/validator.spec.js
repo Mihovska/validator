@@ -1,4 +1,5 @@
 const chai = require('chai');
+const sinon = require('sinon');
 const factorywithConfiguration = require('../lib/factory');
 
 const expect = chai.expect;
@@ -9,23 +10,19 @@ describe('A Validation', () => {
 
   context('using the default validation rules:', () => {
     beforeEach(() => {
-      configuration = function () {
-        configuration.callCount++;
-        configuration.args = Array.prototype.slice.call(arguments);
-        return [
-          { type: 'nonPositive' },
-          { type: 'nonDivisible', options: { divisor: 3, error: 'error.three' } },
-          { type: 'nonDivisible', options: { divisor: 5, error: 'error.five' } }
-        ];
-      };
-      configuration.callCount = 0;
+      configuration = sinon.stub();
+      configuration.returns([
+        { type: 'nonPositive' },
+        { type: 'nonDivisible', options: { divisor: 3, error: 'error.three' } },
+        { type: 'nonDivisible', options: { divisor: 5, error: 'error.five' } }
+      ]);
       const newValidator = factorywithConfiguration(configuration);
       validator = newValidator('default');
     });
 
     it('will access the configuration to get the validation rules', () => {
       expect(configuration.callCount).to.be.equal(1);
-      expect(configuration.args).to.be.deep.equal(['default']);
+      expect(configuration.calledWithExactly('default')).to.be.ok;
     });
 
     it('will return no errors for valid numbers', () => {
@@ -58,25 +55,21 @@ describe('A Validation', () => {
       });
     });
   });
-  
-  context('using the alternative validation rules:', () => { 
+
+  context('using the alternative validation rules:', () => {
     beforeEach(() => {
-      configuration = function () {
-        configuration.callCount++;
-        configuration.args = Array.prototype.slice.call(arguments);
-        return [
-          { type: 'nonPositive' },
-          { type: 'nonDivisible', options: { divisor: 11, error: 'error.eleven' } }
-        ];
-      }
-      configuration.callCount = 0;
+      configuration = sinon.stub();
+      configuration.returns([
+        { type: 'nonPositive' },
+        { type: 'nonDivisible', options: { divisor: 11, error: 'error.eleven' } }
+      ]);
       const newValidator = factorywithConfiguration(configuration)
       validator = newValidator('alternative');
     });
 
     it('will access the configuration to get the validation rules', () => {
       expect(configuration.callCount).to.be.equal(1);
-      expect(configuration.args).to.be.deep.equal(['alternative']);
+      expect(configuration.calledWithExactly('alternative')).to.be.ok;
     });
 
     context('for numbers divisible by 11:', () => {
